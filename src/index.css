@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- KUMPULAN ANIMASI LATAR BELAKANG --- */
+
+/* Animasi 1: Mengambang & Berputar */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-25px) rotate(180deg);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translateY(0px) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+/* Animasi 2: Berdenyut (Pulse) */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.15;
+  }
+}
+
+/* Animasi 3: Berputar Perlahan */
+@keyframes spin-subtle {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* --- GAYA DASAR & KELAS BANTU --- */
+
+.animated-shape {
+  position: absolute;
+  z-index: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* Warna bentuk dasar, semi-transparan */
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Kelas untuk menerapkan animasi spesifik */
+.animate-float {
+  animation-name: float;
+}
+
+.animate-pulse {
+  animation-name: pulse;
+}
+
+.animate-spin-subtle {
+  animation-name: spin-subtle;
+  animation-timing-function: linear; /* Linear lebih cocok untuk putaran */
+}
