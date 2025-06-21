@@ -1,95 +1,138 @@
-import React, { useState, useRef, useEffect } from 'react';
-
-// Impor komponen dari file terpisah
+import React from 'react';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Skills from './components/Skills.jsx';
 import Experience from './components/Experience.jsx';
 import Footer from './components/Footer.jsx';
-import { CloseIcon } from './assets.jsx';
-import { themes } from './themes.js'; 
-import defaultProfilePic from './assets/foto-profil.jpg';
+import { themes } from './data/themes.js'; 
+// Use a placeholder image if the import fails
+const defaultProfilePic = 'https://via.placeholder.com/150';
+import { useActiveSection, useMenu, useTheme } from './hooks';
 
-export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState(defaultProfilePic);
-  const fileInputRef = useRef(null);
-  const [themeIndex, setThemeIndex] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState('down');
-  const lastScrollY = useRef(0);
+/**
+ * Komponen ErrorFallback - Menampilkan pesan error jika terjadi kesalahan rendering
+ * 
+ * @param {Object} props - Props komponen
+ * @param {Error} props.error - Error yang terjadi
+ * @returns {React.ReactElement} Komponen ErrorFallback
+ */
+const ErrorFallback = ({ error }) => (
+  <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+      <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
+      <p className="text-gray-700 mb-4">The application encountered an error while rendering.</p>
+      <details className="border rounded p-3 mt-2">
+        <summary className="font-medium cursor-pointer">Error details</summary>
+        <pre className="mt-2 text-sm overflow-auto p-2 bg-gray-100 rounded">
+          {error.message}
+          {error.stack}
+        </pre>
+      </details>
+      <button 
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        onClick={() => window.location.reload()}
+      >
+        Reload Page
+      </button>
+    </div>
+  </div>
+);
 
-  const cycleTheme = () => {
-      setThemeIndex(prevIndex => (prevIndex + 1) % themes.length);
-  };
+/**
+ * Komponen BackgroundAnimation - Menampilkan animasi latar belakang berdasarkan tema
+ * 
+ * @param {Object} props - Props komponen
+ * @param {Object} props.theme - Tema yang digunakan
+ * @returns {React.ReactElement} Komponen BackgroundAnimation
+ */
+const BackgroundAnimation = ({ theme }) => {
+  if (!theme.animation) return null;
   
-  const currentTheme = themes[themeIndex];
-
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const newImageURL = URL.createObjectURL(file);
-      setProfileImage(newImageURL);
-    }
-  };
-    
-  const handleNavClick = (e) => {
-    e.preventDefault();
-    const targetId = e.currentTarget.getAttribute('href').substring(1);
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    if (isMenuOpen) {
-      setIsMenuOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (Math.abs(currentScrollY - lastScrollY.current) < 5) return;
-      setScrollDirection(currentScrollY > lastScrollY.current ? 'down' : 'up');
-      lastScrollY.current = currentScrollY;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <>
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-white z-50 p-6 flex flex-col">
-          <button onClick={() => setIsMenuOpen(false)} className="self-end mb-8"> <CloseIcon /> </button>
-          <nav className="flex flex-col items-center space-y-6 text-lg">
-            <a href="#tentang" onClick={handleNavClick} className="text-gray-700 hover:text-indigo-600">Tentang</a>
-            <a href="#keahlian" onClick={handleNavClick} className="text-gray-700 hover:text-indigo-600">Keahlian</a>
-            <a href="#pengalaman" onClick={handleNavClick} className="text-gray-700 hover:text-indigo-600">Pengalaman Kerja</a>
-            <a href="#kontak" onClick={handleNavClick} className="text-gray-700 hover:text-indigo-600">Kontak</a>
-          </nav>
+    <div className="absolute inset-0 pointer-events-none z-0">
+      {theme.animation.type === 'float' && (
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className={`absolute ${theme.accent || ''} opacity-20 rounded-full animate-float`}
+              style={{
+                width: Math.random() * 150 + 100 + 'px',
+                height: Math.random() * 150 + 100 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          ))}
         </div>
       )}
+      {theme.animation.type === 'meteor' && (
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(25)].map((_, i) => (
+            <div
+              key={i}
+              className={`absolute ${theme.accent || ''} opacity-30 animate-meteor`}
+              style={{
+                width: '3px',
+                height: '150px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                transform: 'rotate(45deg)',
+                animationDelay: `${Math.random() * 3}s`
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
-      <Header onThemeCycle={cycleTheme} onMenuOpen={() => setIsMenuOpen(true)} handleNavClick={handleNavClick} />
+/**
+ * Komponen utama aplikasi
+ * 
+ * @returns {React.ReactElement} Komponen App
+ */
+export default function App() {
+  const [isMenuOpen, toggleMenu, closeMenu] = useMenu();
+  const [activeSection, handleNavClick] = useActiveSection();
+  const [theme] = useTheme();
+  const { theme, setTheme, themes: themesList } = useTheme({ initialTheme: themes[0] });
+  
+  // Menangani error dengan try-catch
+  try {
 
-      <main>
-        <Hero 
-          theme={currentTheme}
-          profileImage={profileImage}
-          handleImageClick={handleImageClick}
-          fileInputRef={fileInputRef}
-          handleImageChange={handleImageChange}
-          scrollDirection={scrollDirection}
+    return (
+      <div className="min-h-screen w-full flex flex-col relative overflow-x-hidden bg-white text-gray-800">
+        {/* Background animations */}
+        <BackgroundAnimation theme={theme} />
+        {/* Header */}
+        <Header 
+          onMenuOpen={toggleMenu}
+          activeSection={activeSection}
           handleNavClick={handleNavClick}
         />
-        <Skills theme={currentTheme} scrollDirection={scrollDirection} />
-        <Experience theme={currentTheme} scrollDirection={scrollDirection} />
-      </main>
-      
-      <Footer theme={currentTheme} scrollDirection={scrollDirection} />
-    </>
-  );
+        
+        {/* Main content */}
+        <main className="flex-1 relative z-10">
+          {/* Hero section */}
+          <Hero profileImage={defaultProfilePic} handleNavClick={handleNavClick} />
+          
+          {/* Skills section */}
+          <Skills />
+          
+          {/* Experience section */}
+          <Experience />
+        </main>
+        
+        {/* Footer */}
+        <Footer />
+        <Footer theme={theme} />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error rendering App component:', error);
+    return <ErrorFallback error={error} />;
+  }
 }

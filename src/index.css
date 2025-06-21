@@ -2,71 +2,482 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- KUMPULAN ANIMASI LATAR BELAKANG --- */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold;
+  }
+}
 
-/* Animasi 1: Mengambang & Berputar */
+/* Warna latar belakang default dan animasi fade-in */
+:root {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  opacity: 1;
+  color: #1a1a1a;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Scroll Reveal Animation */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.scroll-reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @keyframes float {
-  0% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.2;
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-25px) rotate(180deg);
-    opacity: 0.1;
-  }
-  100% {
-    transform: translateY(0px) rotate(360deg);
-    opacity: 0.2;
+    transform: translateY(-20px);
   }
 }
 
-/* Animasi 2: Berdenyut (Pulse) */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.15;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.25;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.15;
-  }
-}
-
-/* Animasi 3: Berputar Perlahan */
-@keyframes spin-subtle {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* --- GAYA DASAR & KELAS BANTU --- */
-
-.animated-shape {
-  position: absolute;
-  z-index: 0;
-  background-color: rgba(255, 255, 255, 0.5); /* Warna bentuk dasar, semi-transparan */
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-/* Kelas untuk menerapkan animasi spesifik */
 .animate-float {
-  animation-name: float;
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes meteor {
+  0% {
+    transform: translateY(-100%) translateX(-100%) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%) translateX(100%) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+.animate-meteor {
+  animation: meteor 3s linear infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Menghilangkan outline pada elemen yang bisa diedit */
+*:focus {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #6C2BD9 #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #6C2BD9;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+/* Animasi Mengambang (Float) */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-30px) rotate(180deg); opacity: 0.6; }
+}
+
+/* Animasi Hujan Meteor */
+@keyframes meteor {
+  0% { 
+    transform: translateX(0) translateY(0) rotate(45deg);
+    opacity: 0.5;
+  }
+  100% { 
+    transform: translateX(-300px) translateY(300px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Animasi Melayang (Drift) */
+@keyframes drift {
+  0%, 100% { 
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-70px) translateX(70px) rotate(180deg);
+    opacity: 0.6;
+  }
+}
+
+/* Animasi Berdenyut (Pulse) */
+@keyframes pulse-custom {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.8);
+    opacity: 0.6;
+  }
+}
+
+/* Animasi Memantul (Bounce) */
+@keyframes bounce-custom {
+  0%, 100% { 
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-50px);
+    opacity: 0.6;
+  }
+}
+
+/* Kelas Animasi */
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
+.animate-meteor {
+  animation: meteor 2s linear infinite;
+}
+
+.animate-drift {
+  animation: drift 15s ease-in-out infinite;
 }
 
 .animate-pulse {
-  animation-name: pulse;
+  animation: pulse-custom 3s ease-in-out infinite;
 }
 
-.animate-spin-subtle {
-  animation-name: spin-subtle;
-  animation-timing-function: linear; /* Linear lebih cocok untuk putaran */
+.animate-bounce {
+  animation: bounce-custom 2s ease-in-out infinite;
+}
+
+/* Animasi Hover untuk Kartu */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Animasi Scroll Reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animasi Gradient Text */
+.gradient-text {
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s linear infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-pulse-custom {
+  animation: pulse-custom 3s ease-in-out infinite;
+}
+
+.animate-bounce-custom {
+  animation: bounce-custom 2s ease-in-out infinite;
+}
+
+/* Efek Teks 3D dengan Gradien */
+.text-3d-gradient {
+  background: linear-gradient(to bottom, #ffffff, #a0a0a0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+
+
+
+
+
+
+
+
+/* Skill card hover effect */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.skill-card-active {
+  animation: pulse-border 2s infinite;
+}
+
+/* Icon rotation animation */
+
+
+
+/* Page Transition Animations */
+.transition-element {
+  will-change: transform, opacity;
+}
+
+/* Animasi Transisi Halaman */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-out-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+@keyframes fade-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out;
+}
+
+.animate-fade-in-left {
+  animation: fade-in-left 0.7s ease-out 0.3s both;
+}
+
+.animate-fade-in-up-delayed {
+  animation: fade-in-up 0.8s ease-out 0.9s both;
+}
+
+
+
+/* Indikator Bagian Aktif */
+.nav-indicator {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  background-color: currentColor;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+.active-indicator {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  height: 2px;
+  background-color: currentColor;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Efek Teks 3D dengan Gradien */
+.text-3d-gradient {
+  background: linear-gradient(to bottom, #ffffff, #a0a0a0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Animasi Teks 3D */
+@keyframes text-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.text-3d-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,1) 0%, 
+    rgba(180,180,180,1) 25%, 
+    rgba(255,255,255,1) 50%, 
+    rgba(180,180,180,1) 75%, 
+    rgba(255,255,255,1) 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: text-shimmer 4s ease-in-out infinite;
+  /* Menambahkan bayangan teks yang lebih tebal dan kontras */
+  text-shadow: 
+    0 1px 0 #ccc,
+    0 2px 0 #ccc,
+    0 3px 0 #aaa,
+    0 4px 0 #999,
+    0 5px 0 #888,
+    0 6px 1px rgba(0,0,0,.1),
+    0 0 5px rgba(0,0,0,.1),
+    0 1px 3px rgba(0,0,0,.3),
+    0 3px 5px rgba(0,0,0,.2),
+    0 5px 10px rgba(0,0,0,.25),
+    0 10px 10px rgba(0,0,0,.2),
+    0 20px 20px rgba(0,0,0,.15);
+  will-change: background-position; /* Optimasi performa */
+  transform: translateZ(0); /* Aktifkan hardware acceleration */
+}
+
+/* Wrapper untuk teks 3D */
+.text-3d-wrapper {
+  overflow: hidden;
+  padding: 0.5rem 0;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Animasi Parallax */
+@keyframes parallax-float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-15px) translateX(15px); }
+}
+
+.parallax-element {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.parallax-slow {
+  animation: parallax-float 20s ease-in-out infinite;
+}
+
+.parallax-medium {
+  animation: parallax-float 15s ease-in-out infinite;
+}
+
+.parallax-fast {
+  animation: parallax-float 10s ease-in-out infinite;
+}
+
+/* Custom cursor styles */
+.custom-cursor {
+  position: absolute;
+  background-color: rgba(99, 102, 241, 0.2);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+/* Skill card hover effect */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.skill-card-active {
+  animation: pulse-border 2s infinite;
+}
+
+/* Icon rotation animation */
+@keyframes icon-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.icon-wiggle {
+  animation: icon-wiggle 1s ease-in-out infinite;
 }
